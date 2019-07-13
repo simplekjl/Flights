@@ -15,6 +15,8 @@ import androidx.appcompat.app.AppCompatActivity
  * `SKY_API_KEY = your_api_key`
  * `SKY_URL_BASE_ENDPOINT = "http://partners.api.skyscanner.net/apiservices/"`
  *
+ * `SKY_IMAGE_BASE_URL = "https://logos.skyscnr.com/images/airlines/"`
+ *
  *
  */
 class MainActivity : AppCompatActivity() {

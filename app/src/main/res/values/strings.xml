@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">Flights</string>
+    <string name="error_fetching_data">We are sorry, we couldn\'t reach our servers. \n Tap here to try again</string>
+    <string name="airlineIcon">airline icon</string>
+    <string name="satisfaction_icon">satisfaction</string>
+    <string name="sort_amp_filters"><![CDATA[SORT & FILTERS]]></string>
 </resources>

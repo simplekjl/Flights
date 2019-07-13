@@ -17,6 +17,7 @@ android {
         versionName "1.0"
         buildConfigField 'String', "apiKey", SKY_API_KEY
         buildConfigField "String", "BASE_URL_API", SKY_URL_BASE_ENDPOINT
+        buildConfigField "String", "BASE_IMAGE_URL", SKY_IMAGE_BASE_URL
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
