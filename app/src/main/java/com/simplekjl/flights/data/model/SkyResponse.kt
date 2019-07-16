@@ -21,10 +21,14 @@ data class SkyResponse(
     @SerializedName("Agents")
     val agents: List<Agent>,
     @SerializedName("Places")
-    val plaes: List<Place>,
+    val places: List<Place>,
     @SerializedName("Currencies")
     val currencies: List<Currency>,
     @SerializedName("ServiceQuery")
     val dateTime: ServiceQuery
 
-)
+) {
+    override fun toString(): String {
+        return "SkyResponse(sessionKey='$sessionKey', query=$query, status='$status', itineraries=$itineraries, legs=$legs, segments=$segments, carriers=$carriers, agents=$agents, places=$places, currencies=$currencies, dateTime=$dateTime)"
+    }
+}

@@ -31,5 +31,9 @@ interface SkyScannerApiService {
     ): Call<ServiceQuery>
 
     @GET
-    fun getAllResults(@Url url: String, @Query("apiKey") apiKey: String = BuildConfig.apiKey): Call<SkyResponse>
+    @FormUrlEncoded
+    fun getAllResults(
+        @Url url: String,
+        @Query("apiKey") apiKey: String = BuildConfig.apiKey
+    ): Call<SkyResponse>
 }

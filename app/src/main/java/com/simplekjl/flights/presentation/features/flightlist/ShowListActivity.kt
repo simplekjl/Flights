@@ -28,59 +28,28 @@ class FlightListActivity : AppCompatActivity(), ItemClickListener {
         //started point for the results
         getFlights("EDI", "LHR")
         // subscriptions to have an infinite scroll
-        subscribeToMoreFlights()
+        //subscribeToMoreFlights()
     }
 
-    private fun subscribeToMoreFlights() {
-        activityViewModel.flights.observe(
-            this, Observer { state ->
-                when (state) {
-                    is Loading -> {
-                        Timber.d("Loading more ...")
-                    }
-                    is ErrorEx -> {
-                        Timber.d(tag, "message : ${state.msg} , code: ${state.code}")
-                    }
-//                    is ErrorMessage -> {
-//                        Timber.d(state.status_message)
-//                    }
-//                    is NotFoundMessage -> {
-//                        Timber.d(state.status_message)
-//                    }
-//                    is Success<Any, Any> -> {
-//                        activityViewModel.nextPage = state.page + 1
-//                        activityViewModel.totalPages = state.total_pages
-//                        activityViewModel.loadingData = false
-//                        adapter.updateItems(state.results)
-//                    }
-                }
-            })
-    }
 
     private fun getFlights(origin: String, destination: String) {
-//        activityViewModel.getPrices(origin, destination).observe(this, Observer { state ->
-//            when (state) {
-//                is Loading -> {
-//                    showLoader()
+        activityViewModel.getPrices(origin, destination).observe(this, Observer { state ->
+            when (state) {
+                is Loading -> {
+                    showLoader()
+                }
+                is ErrorEx -> {
+                    showErrorMessage()
+                    Timber.d(tag, "message : ${state.msg} , code: ${state.code}")
+                }
+//                is ErrorMessage -> {
+//                    updateErrorMessage(state.status_message)
 //                }
-//                is ErrorEx -> {
-//                    showErrorMessage()
-//                    Timber.d(tag, "message : ${state.msg} , code: ${state.code}")
+//                is NotFoundMessage -> {
+//                    updateErrorMessage(state.status_message)
 //                }
-////                is ErrorMessage -> {
-////                    updateErrorMessage(state.status_message)
-////                }
-////                is NotFoundMessage -> {
-////                    updateErrorMessage(state.status_message)
-////                }
-//                is Success<Any?, Any?> -> {
-//                    showList()
-//                    activityViewModel.nextPage = state.page + 1
-//                    activityViewModel.totalPages = state.total_pages
-//                    renderShows(state.results)
-//                }
-//            }
-//        })
+            }
+        })
     }
 
     private fun updateErrorMessage(msg: String) {

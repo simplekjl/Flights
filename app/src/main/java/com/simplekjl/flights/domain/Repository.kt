@@ -7,6 +7,6 @@ import io.reactivex.Single
 
 interface Repository {
 
-    fun getPrice(origin: String, destination: String) : Single<SkyResponse>
+    fun getPrice(origin: String, destination: String) : Single<String>
     fun getMoreResults(url: String): Observable<SkyResponse>
 }

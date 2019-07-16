@@ -1,5 +1,6 @@
 package com.simplekjl.flights.presentation.features.flightlist
 
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.simplekjl.flights.domain.Repository
@@ -7,6 +8,7 @@ import com.simplekjl.flights.presentation.features.flightlist.mapper.StateMapper
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
+import timber.log.Timber
 
 class ShowListActivityViewModel constructor(private val repository: Repository, private val stateMapper: StateMapper) :
     ViewModel() {
@@ -18,10 +20,16 @@ class ShowListActivityViewModel constructor(private val repository: Repository, 
 
     val flights: MutableLiveData<ShowListViewState> = MutableLiveData()
 
-    fun getPrices(origin: String, destination: String) {
+    fun getPrices(origin: String, destination: String) : LiveData<ShowListViewState> {
+        val data = MutableLiveData<ShowListViewState>()
+        repository.getPrice(origin, destination).subscribeOn(Schedulers.io())
+            .subscribe({
+                Timber.d(it)
+            },{
+                Timber.d("ERRRRRRRR")
+            })
 
-        repository.getPrice(origin, destination)
-
+        return data
     }
 
     fun getAllResults(newUrl: String) {
