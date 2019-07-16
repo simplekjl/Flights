@@ -65,7 +65,6 @@ object SkyScannerServiceFactory {
             val newRequest: Request.Builder = request
                 .newBuilder()
                 .header("Content-Type", "application/x-www-form-urlencoded")
-
             it.proceed(newRequest.build())
         }
     }

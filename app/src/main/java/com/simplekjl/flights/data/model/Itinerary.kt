@@ -1,13 +1,15 @@
 package com.simplekjl.flights.data.model
 
+import com.google.gson.annotations.SerializedName
 
 data class Itinerary(
-    val poster_path: String?,
-    val popularity: Float,
-    val id: Int,
-    val backdrop_path: String,
-    val vote_average: Float,
-    val overview: String,
-    val first_air_date: String,
-    val name: String
+    @SerializedName("OutboundLegId")
+    val outboundLegId: String,
+    @SerializedName("OutboundLegId")
+    val inboundLegId: String,
+    @SerializedName("PricingOptions")
+    val pricingOptions: List<PricingOptions>,
+    @SerializedName("BookingDetailsLink")
+    val bookingDetailsLink: BookingDetailsLink
 )
+
