@@ -7,11 +7,12 @@ import io.reactivex.Single
 class NetworkImpl constructor(private val service: SkyScannerApiService) : Network {
     override fun getResults(url: String): Single<SkyResponse> {
         return Single.create {
-            val call = service.getAllResults(
-                url
-            ).execute()
+            val call = service.getAllResults(url).execute()
             if (call.isSuccessful)
                 it.onSuccess(call.body()!!)
+            else {
+                it.onError(Throwable(call.errorBody().toString()))
+            }
         }
     }
 
@@ -23,8 +24,8 @@ class NetworkImpl constructor(private val service: SkyScannerApiService) : Netwo
                 "2019-07-27", "1", "0", "0", BuildConfig.apiKey
             ).execute()
             if (call.isSuccessful && call.code() == 201) {
-                val newUrl = call.headers().get("location")
-                newUrl?.let { emitter.onSuccess(newUrl) }
+                val newUrl = call.headers().get("location") ?: ""
+                emitter.onSuccess(newUrl)
             }
         }
     }

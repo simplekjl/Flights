@@ -20,15 +20,18 @@ class ShowListActivityViewModel constructor(private val repository: Repository, 
 
     val flights: MutableLiveData<ShowListViewState> = MutableLiveData()
 
-    fun getPrices(origin: String, destination: String) : LiveData<ShowListViewState> {
+    fun getPrices(origin: String, destination: String): LiveData<ShowListViewState> {
         val data = MutableLiveData<ShowListViewState>()
-        repository.getPrice(origin, destination).subscribeOn(Schedulers.io())
-            .subscribe({
+        repository.getPrice(origin, destination)
+            ?.subscribeOn(Schedulers.io())
+            ?.observeOn(AndroidSchedulers.mainThread())
+            ?.subscribe({
+                Timber.d(it.toString())
+            }, {
                 Timber.d(it)
-            },{
-                Timber.d("ERRRRRRRR")
-            })
-
+            })?.let {
+                compositeDisposable.add(it)
+            }
         return data
     }
 
