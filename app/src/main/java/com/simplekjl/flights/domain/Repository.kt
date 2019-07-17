@@ -1,11 +1,11 @@
 package com.simplekjl.flights.domain
 
 import com.simplekjl.flights.data.model.SkyResponse
+import com.simplekjl.flights.presentation.features.flightlist.model.ItineraryModel
 import io.reactivex.Observable
-import io.reactivex.Single
 
 interface Repository {
 
-    fun getPrice(origin: String, destination: String): Observable<SkyResponse>?
+    fun getPrice(origin: String, destination: String): Observable<ItineraryModel>
     fun getMoreResults(url: String): Observable<SkyResponse>
 }

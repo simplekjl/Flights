@@ -1,26 +1,21 @@
 package com.simplekjl.flights.presentation.features.flightlist.mapper
 
-import com.simplekjl.flights.data.model.ResponseType
-import com.simplekjl.flights.data.model.SuccessResponse
-import com.simplekjl.flights.presentation.features.flightlist.Loading
-import com.simplekjl.flights.presentation.features.flightlist.ShowListViewState
+import com.simplekjl.flights.data.model.SkyResponse
+import com.simplekjl.flights.presentation.features.flightlist.model.ItineraryModel
 
+/**
+ * Conversion from SkyResponse model to ItineraryModel which represents the data required for the view
+ */
 
-open class StateMapper : EntityMapper<ResponseType, ShowListViewState> {
-    override fun mapFromRemote(type: ResponseType): ShowListViewState {
-        return when (type) {
-//            is ErrorResponse -> {
-//                ErrorMessage(type.status_message, type.success, type.status_code)
-//            }
-//            is NotFoundResponse -> {
-//                NotFoundMessage(type.status_message, type.status_code)
-//            }
-            is SuccessResponse<*, *> -> {
-                Loading
-            }
-            else -> {
-                Loading
-            }
-        }
+open class StateMapper : EntityMapper<SkyResponse, ItineraryModel> {
+    override fun mapFromRemote(type: SkyResponse): ItineraryModel {
+        val itineraryModel = ItineraryModel()
+        itineraryModel.itineraries = type.itineraries
+        itineraryModel.legs = type.legs
+        itineraryModel.segments = type.segments
+        itineraryModel.trip = type.itineraries
+        itineraryModel.count = type.itineraries.count()
+        return itineraryModel
     }
+
 }

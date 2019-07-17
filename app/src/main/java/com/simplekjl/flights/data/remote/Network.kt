@@ -1,6 +1,5 @@
 package com.simplekjl.flights.data.remote
 
-import com.simplekjl.flights.data.model.ResponseType
 import com.simplekjl.flights.data.model.SkyResponse
 import io.reactivex.Single
 

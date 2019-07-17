@@ -17,7 +17,7 @@ class NetworkImpl constructor(private val service: SkyScannerApiService) : Netwo
     }
 
     override fun getPrices(origin: String, destination: String): Single<String> {
-        return Single.create { emitter ->
+        return Single.create {
             val call = service.getPrices(
                 "Economy", "UK", "GBP", "en-GB",
                 "iata", origin, destination, "2019-07-20",
@@ -25,7 +25,9 @@ class NetworkImpl constructor(private val service: SkyScannerApiService) : Netwo
             ).execute()
             if (call.isSuccessful && call.code() == 201) {
                 val newUrl = call.headers().get("location") ?: ""
-                emitter.onSuccess(newUrl)
+                it.onSuccess(newUrl)
+            } else {
+                it.onError(Throwable(call.errorBody().toString()))
             }
         }
     }
