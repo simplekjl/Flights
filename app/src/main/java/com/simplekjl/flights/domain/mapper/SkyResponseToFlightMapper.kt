@@ -1,5 +1,7 @@
 package com.simplekjl.flights.domain.mapper
 
+import com.simplekjl.flights.data.model.Place
+import com.simplekjl.flights.data.model.Segment
 import com.simplekjl.flights.data.model.SkyResponse
 import com.simplekjl.flights.presentation.features.flightlist.model.FlightDetailsModel
 import timber.log.Timber
@@ -18,7 +20,10 @@ open class SkyResponseToFlightMapper : EntityMapper<SkyResponse, List<FlightDeta
         type.itineraries.forEach { itinerary ->
 
             val outboundLeg = type.legs.first { it.id == itinerary.outboundLegId }
-            val inboundLeg = type.legs.first { it.id == itinerary.outboundLegId }
+            val inboundLeg = type.legs.first { it.id == itinerary.inboundLegId }
+            val outboundSegments = type.segments.first { it.id == outboundLeg.segmentIds.first().toString() }
+            val inboundSegments = type.segments.first { it.id == inboundLeg.segmentIds.first().toString() }
+            val places = type.places
 
             for (i in itinerary.pricingOptions) {
                 val flight = FlightDetailsModel()
@@ -26,7 +31,7 @@ open class SkyResponseToFlightMapper : EntityMapper<SkyResponse, List<FlightDeta
                 //outbound flight
                 flight.outboundDuration = getTimeString(outboundLeg.duration)
                 flight.outboundStops = outboundLeg.segmentIds.count()
-                flight.isOutboundDirect = flight.inboundStops == 0
+                flight.isOutboundDirect = getTextForFlightType(flight.outboundStops)
                 flight.outboundDepartureTime = getTimeFromDate(outboundLeg.departure)
                 flight.outboundArrivalTime = getTimeFromDate(outboundLeg.arrival)
                 val outboundCarrier = type.carriers.first { outboundLeg.carriers.first() == it.id }
@@ -34,24 +39,26 @@ open class SkyResponseToFlightMapper : EntityMapper<SkyResponse, List<FlightDeta
                 flight.outboundCarrierCode = outboundCarrier.code
                 flight.outboundCarrierImageUrl = outboundCarrier.imageUrl
                 val outboundAgent = type.agents.first { i.agents[0] == it.id }
-                flight.outboundAgentName = outboundAgent.name
+                flight.outboundAgentName = "via ".plus(outboundAgent.name)
                 flight.outboundAgentImageUrl = outboundAgent.imageUrl
+                flight.outboundDestination = getDestinationText(outboundSegments, places, flight.outboundAgentName)
 
                 //inbound flight
                 flight.inboundStops = inboundLeg.segmentIds.count()
                 flight.inboundDuration = getTimeString(inboundLeg.duration)
-                flight.isInboundDirect = flight.inboundStops == 0
+                flight.isInboundDirect = getTextForFlightType(flight.inboundStops)
                 flight.inboundDepartureTime = getTimeFromDate(inboundLeg.departure)
                 flight.inboundArrivalTime = getTimeFromDate(inboundLeg.arrival)
                 val inboundCarrier = type.carriers.first { inboundLeg.carriers.first() == it.id }
                 flight.inboundCarrierName = inboundCarrier.name
-                flight.inboundCcarrierCode = inboundCarrier.code
+                flight.inboundCarrierCode = inboundCarrier.code
                 flight.inboundCarrierImageUrl = inboundCarrier.imageUrl
                 val inboundAgent = type.agents.first { i.agents[0] == it.id }
-                flight.inboundAgentName = inboundAgent.name
+                flight.inboundAgentName = "via ".plus(inboundAgent.name)
                 flight.inboundAgentImageUrl = inboundAgent.imageUrl
+                flight.inboundDestination = getDestinationText(inboundSegments, places, flight.inboundAgentName)
                 //currency
-                flight.price = i.price
+                flight.price = i.price.toString()
                 flight.currencySymbol = type.currencies.first().symbol
                 flight.symbolOnLeft = type.currencies.first().symbolOnLeft
                 flightList.add(flight)
@@ -61,6 +68,17 @@ open class SkyResponseToFlightMapper : EntityMapper<SkyResponse, List<FlightDeta
         }
 
         return flightList
+    }
+
+    private fun getDestinationText(segment: Segment, places: List<Place>, agentName: String): String {
+        val originStation = places.first { segment.originStation == it.id }.code
+        val destinationStation = places.first { segment.destinationStation == it.id }.code
+
+        return "$originStation - $destinationStation, $agentName"
+    }
+
+    private fun getTextForFlightType(stops: Int): String {
+        return if (stops == 1) "Direct" else " v stops".replace("v", stops.toString())
     }
 
     private fun getTimeFromDate(time: String): String {

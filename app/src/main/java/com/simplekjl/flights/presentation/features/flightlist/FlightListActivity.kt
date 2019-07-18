@@ -73,6 +73,9 @@ class FlightListActivity : AppCompatActivity(), ItemClickListener {
 
     private fun renderFlights(list: List<FlightDetailsModel>) {
         //setting the adapter
+        val size = list.size
+        activityBinding.sortHeader.flightSearchResult.text =
+            getString(R.string.result_size).replace("size", size.toString())
         activityBinding.rvGeneric.layoutManager = LinearLayoutManager(this@FlightListActivity)
         activityBinding.rvGeneric.adapter = FlightsAdapter(list, this)
 

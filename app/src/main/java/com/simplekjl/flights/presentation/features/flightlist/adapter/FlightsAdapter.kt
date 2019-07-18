@@ -3,6 +3,7 @@ package com.simplekjl.flights.presentation.features.flightlist.adapter
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.simplekjl.flights.databinding.FlightCardBinding
 import com.simplekjl.flights.databinding.FlightItemBinding
 import com.simplekjl.flights.presentation.features.flightlist.model.FlightDetailsModel
 
@@ -13,7 +14,7 @@ class FlightsAdapter(
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): FlightsViewHolder {
         val inflater = LayoutInflater.from(parent.context)
-        val binding = FlightItemBinding.inflate(inflater, parent, false)
+        val binding = FlightCardBinding.inflate(inflater, parent, false)
 
         return FlightsViewHolder(binding, listener)
     }
