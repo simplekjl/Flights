@@ -2,8 +2,8 @@ package com.simplekjl.flights.domain
 
 import com.simplekjl.flights.data.model.SkyResponse
 import com.simplekjl.flights.data.remote.Network
-import com.simplekjl.flights.presentation.features.flightlist.model.ItineraryModel
-import com.simplekjl.flights.presentation.features.flightlist.mapper.StateMapper
+import com.simplekjl.flights.domain.mapper.SkyResponseToFlightMapper
+import com.simplekjl.flights.presentation.features.flightlist.model.FlightDetailsModel
 import io.reactivex.Observable
 
 /**
@@ -12,8 +12,8 @@ import io.reactivex.Observable
 
 class RepositoryImpl(private val network: Network) : Repository {
 
-    override fun getPrice(origin: String, destination: String): Observable<ItineraryModel> {
-        val stateMapper = StateMapper()
+    override fun getPrice(origin: String, destination: String): Observable<List<FlightDetailsModel>> {
+        val stateMapper = SkyResponseToFlightMapper()
         return network.getPrices(origin, destination)
             .flatMapObservable { result -> getMoreResults(result) }
             .map { stateMapper.mapFromRemote(it) }

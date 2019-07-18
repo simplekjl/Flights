@@ -6,29 +6,25 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import com.simplekjl.flights.R
-import com.simplekjl.flights.data.model.Itinerary
 import com.simplekjl.flights.databinding.ActivityMainBinding
 import com.simplekjl.flights.presentation.features.flightlist.adapter.FlightsAdapter
 import com.simplekjl.flights.presentation.features.flightlist.adapter.ItemClickListener
+import com.simplekjl.flights.presentation.features.flightlist.model.FlightDetailsModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import timber.log.Timber
 
+@Suppress("UNCHECKED_CAST")
 class FlightListActivity : AppCompatActivity(), ItemClickListener {
 
     private lateinit var activityBinding: ActivityMainBinding
-    private val activityViewModel: ShowListActivityViewModel by viewModel()
-    private val tag = FlightListActivity::class.java.name
-    val adapter: FlightsAdapter = FlightsAdapter(mutableListOf(), this)
+    private val activityViewModel: FlightListActivityViewModel by viewModel()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         activityBinding = DataBindingUtil.setContentView(this, R.layout.activity_main)
         //started point for the results
         getFlights("EDI", "LHR")
-        // subscriptions to have an infinite scroll
-        //subscribeToMoreFlights()
     }
 
 
@@ -40,14 +36,15 @@ class FlightListActivity : AppCompatActivity(), ItemClickListener {
                 }
                 is ErrorEx -> {
                     showErrorMessage()
-                    Timber.d(tag, "message : ${state.msg} , code: ${state.code}")
+                    updateErrorMessage("error")
+                    Timber.d("message : ${state.msg}")
                 }
-//                is ErrorMessage -> {
-//                    updateErrorMessage(state.status_message)
-//                }
-//                is NotFoundMessage -> {
-//                    updateErrorMessage(state.status_message)
-//                }
+                is Success<*> -> {
+                    showList()
+                    state.results?.let {
+                        renderFlights(it as List<FlightDetailsModel>)
+                    }
+                }
             }
         })
     }
@@ -74,28 +71,11 @@ class FlightListActivity : AppCompatActivity(), ItemClickListener {
         activityBinding.progressBar.visibility = View.INVISIBLE
     }
 
-    private fun renderShows(list: List<Itinerary>) {
+    private fun renderFlights(list: List<FlightDetailsModel>) {
         //setting the adapter
         activityBinding.rvGeneric.layoutManager = LinearLayoutManager(this@FlightListActivity)
-        activityBinding.rvGeneric.adapter = adapter
-        adapter.updateItems(list)
-        with(activityBinding.rvGeneric) {
-            addOnScrollListener(object : RecyclerView.OnScrollListener() {
-                override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
-                    super.onScrolled(recyclerView, dx, dy)
-                    val layoutManager = recyclerView.layoutManager
-                    val totalItemCount = layoutManager!!.itemCount
-                    val lastVisibleItemPosition = (layoutManager as LinearLayoutManager).findLastVisibleItemPosition()
+        activityBinding.rvGeneric.adapter = FlightsAdapter(list, this)
 
-                    Timber.d("item Count $totalItemCount")
-                    if (lastVisibleItemPosition == totalItemCount.minus(2)) {
-                        //activityViewModel.loadNextPage()
-                        Timber.d("Loading next page $lastVisibleItemPosition")
-                    }
-
-                }
-            })
-        }
     }
 
     override fun onItemClick(position: Int) {

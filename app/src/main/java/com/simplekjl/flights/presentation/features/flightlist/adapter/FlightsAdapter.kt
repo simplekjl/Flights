@@ -3,11 +3,11 @@ package com.simplekjl.flights.presentation.features.flightlist.adapter
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.simplekjl.flights.data.model.Itinerary
 import com.simplekjl.flights.databinding.FlightItemBinding
+import com.simplekjl.flights.presentation.features.flightlist.model.FlightDetailsModel
 
 class FlightsAdapter(
-    private val showList: MutableList<Itinerary>,
+    private val showList: List<FlightDetailsModel>,
     private val listener: ItemClickListener
 ) : RecyclerView.Adapter<FlightsViewHolder>() {
 
@@ -24,8 +24,4 @@ class FlightsAdapter(
         holder.setItem(showList[position])
     }
 
-    fun updateItems(cards: List<Itinerary>) {
-        showList.addAll(cards)
-        notifyDataSetChanged()
-    }
 }

@@ -1,4 +1,4 @@
-package com.simplekjl.flights.presentation.features.flightlist.mapper
+package com.simplekjl.flights.domain.mapper
 
 /**
  * Interface for model mappers. It provides helper methods that facilitate
