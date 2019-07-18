@@ -40,12 +40,5 @@ class BindingUtils {
                     .into(view)
             }
         }
-
-        private fun getPathForImage(url: String): String {
-            val sb: StringBuilder = StringBuilder(150)
-            sb.append(BuildConfig.BASE_IMAGE_URL)
-            sb.append(url)
-            return sb.toString()
-        }
     }
 }
