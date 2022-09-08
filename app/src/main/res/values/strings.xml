@@ -4,4 +4,6 @@
     <string name="airlineIcon">airline icon</string>
     <string name="satisfaction_icon">satisfaction</string>
     <string name="sort_amp_filters"><![CDATA[SORT & FILTERS]]></string>
+    <string name="score">10</string>
+    <string name="result_size">size of size Results</string>
 </resources>
